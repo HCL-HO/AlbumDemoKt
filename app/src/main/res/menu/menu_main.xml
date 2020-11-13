@@ -1,0 +1,17 @@
+<!--
+  ~   Created by Eric Ho on 11/13/20 12:33 PM
+  ~   Copyright (c) 2020 . All rights reserved.
+  ~   Last modified 11/13/20 12:31 PM
+  ~   Email: clhoac@gmail.com
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ecl.ho.keysocalbum.ui.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

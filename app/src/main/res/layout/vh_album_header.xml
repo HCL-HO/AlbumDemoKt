@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~   Created by Eric Ho on 11/13/20 12:33 PM
+  ~   Copyright (c) 2020 . All rights reserved.
+  ~   Last modified 11/13/20 12:31 PM
+  ~   Email: clhoac@gmail.com
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/vh_header_height"
+        android:clickable="false"
+        android:focusable="false"
+        app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:padding="10dp">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/album_title"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold|italic"
+                app:autoSizeMaxTextSize="48sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Keysoc Album" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lb_last_updt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lb_bookmarked"
+                android:textColor="@color/info_text_header"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/lb_total"
+                app:layout_constraintTop_toBottomOf="@+id/lb_total" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lb_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/lb_total"
+                android:textColor="@color/info_text_header"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/lb_last_updt"
+                app:layout_constraintStart_toStartOf="@+id/album_title"
+                app:layout_constraintTop_toBottomOf="@+id/album_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/info_text_header"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lb_total"
+                app:layout_constraintEnd_toStartOf="@+id/vh_header_collection_icon"
+                app:layout_constraintStart_toEndOf="@+id/lb_total"
+                tools:text="20" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_lastupdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/info_text_header"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lb_last_updt"
+                app:layout_constraintEnd_toStartOf="@+id/vh_header_collection_icon"
+                app:layout_constraintStart_toEndOf="@+id/lb_last_updt" />
+
+            <ImageView
+                android:id="@+id/vh_header_collection_icon"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_lastupdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_total"
+                app:srcCompat="@drawable/ic_baseline_library_music_24"
+                app:tint="@color/colorAccent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</merge>

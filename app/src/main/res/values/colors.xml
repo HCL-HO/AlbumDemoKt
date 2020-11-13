@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~   Created by Eric Ho on 11/13/20 12:33 PM
+  ~   Copyright (c) 2020 . All rights reserved.
+  ~   Last modified 11/13/20 12:31 PM
+  ~   Email: clhoac@gmail.com
+  -->
+
+<resources>
+    <color name="colorPrimary">#646165</color>
+    <color name="colorPrimaryDark">#82846D</color>
+    <color name="colorAccent">#95A472</color>
+    <color name="colorAccent1">#C8E087</color>
+    <color name="colorAccent2">#DDFCAD</color>
+    <color name="info_text">@color/colorPrimary</color>
+    <color name="info_text_header" >@color/colorAccent1</color>
+
+
+    <!--    <color name="colorPrimary">#8D3B72</color>-->
+<!--    <color name="colorPrimaryDark">#B5D8CC</color>-->
+<!--    <color name="colorAccent">#8A7090</color>-->
+<!--    <color name="colorAccent1">#89A7A7</color>-->
+<!--    <color name="colorAccent2">#72E1D1</color>-->
+<!--    <color name="info_text">@color/colorPrimary</color>-->
+</resources>
