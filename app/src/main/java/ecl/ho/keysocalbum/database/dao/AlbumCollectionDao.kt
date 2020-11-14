@@ -1,33 +1,29 @@
 /*
- *   Created by Eric Ho on 11/13/20 6:53 PM
+ *   Created by Eric Ho on 11/14/20 1:22 PM
  *   Copyright (c) 2020 . All rights reserved.
- *   Last modified 11/13/20 6:53 PM
+ *   Last modified 11/14/20 1:22 PM
  *   Email: clhoac@gmail.com
  */
 
 package ecl.ho.keysocalbum.database.dao
 
-import androidx.room.Entity
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import ecl.ho.keysocalbum.dtos.AlbumDTO
+import ecl.ho.keysocalbum.vos.AlbumCollectionVo
 
-@Entity
-class AlbumCollectionDao(
-    var wrapperType: String? = "",
-    var collectionType: String? = "",
-    var artistId: String? = "",
-    var collectionId: String? = "",
-    var artistName: String? = "",
-    var collectionName: String? = "",
-    var collectionCensoredName: String? = "",
-    var artistViewUrl: String? = "",
-    var collectionViewUrl: String? = "",
-    var artworkUrl60: String? = "",
-    var artworkUrl100: String? = "",
-    var collectionPrice: String? = "",
-    var collectionExplicitness: String? = "",
-    var trackCount: String? = "",
-    var copyright: String? = "",
-    var country: String? = "",
-    var currency: String? = "",
-    var releaseDate: String? = "",
-    var primaryGenreName: String? = "",
-)
+@Dao
+interface AlbumCollectionDao {
+
+    @Update
+    suspend fun upsertAlbumCollection(vo: AlbumCollectionVo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAlbumCollection(vo: AlbumCollectionVo): Long
+
+    @Delete
+    suspend fun deleteCollection(vo: AlbumCollectionVo)
+
+    @Query("select collectionId from albumcollection")
+    fun getCollectionIds(): LiveData<List<String>>
+}

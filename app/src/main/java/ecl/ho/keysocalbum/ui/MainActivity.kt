@@ -18,28 +18,39 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import ecl.ho.keysocalbum.R
-import ecl.ho.keysocalbum.network.AlbumApi
+import ecl.ho.keysocalbum.database.AlbumDatabase
+import ecl.ho.keysocalbum.dtos.AlbumDTO
 import ecl.ho.keysocalbum.network.PARM_ENTITY
 import ecl.ho.keysocalbum.network.PARM_TERM
 import ecl.ho.keysocalbum.ui.albumrv.AlbumRVAdapter
 import ecl.ho.keysocalbum.ui.albumrv.AlbumViewHolder
+import ecl.ho.keysocalbum.util.DataConverter
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.vh_album_header.*
-import kotlinx.android.synthetic.main.vh_album_list_item.*
 
 class MainActivity : AppCompatActivity() {
 
     private val ALBUM_NAME: CharSequence? = PARM_TERM.replace("+", " ") + " " + PARM_ENTITY
+    lateinit var viewModel: AlbumListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val viewModel: AlbumListViewModel = getViewModel()
-
+        viewModel = getViewModel()
         val adapter = AlbumRVAdapter(object : AlbumViewHolder.Companion.OnClickListener {
-            override fun bookmarkClicked(posistion: Int) {
+            override fun bookmarkClicked(item: AlbumDTO, exist: Boolean) {
+                val vo = DataConverter.albumDtoToAlbumVo(item)
+                when (exist) {
+                    true -> {
+                        viewModel.deleteCollection(vo)
+                    }
+                    false -> {
+                        viewModel.addToCollection(vo)
+                    }
+                }
+
             }
 
         })
@@ -62,10 +73,27 @@ class MainActivity : AppCompatActivity() {
             tv_total.text = it
         })
 
+        viewModel.collections.observe(this, {
+            tv_collection_count.text = it.size.toString()
+            adapter.updateCollections(it)
+            adapter.notifyDataSetChanged()
+        })
+
         setupHeader()
 
         setupCollapseBar()
 
+        setupSwipeReferesh()
+
+    }
+
+    private fun setupSwipeReferesh() {
+        album_swipe_refresh.setOnRefreshListener {
+            album_swipe_refresh.isRefreshing = true
+            viewModel.getAlbumFromApi().observe(this, {
+                album_swipe_refresh.isRefreshing = false
+            })
+        }
     }
 
     private fun setupHeader() {
@@ -76,13 +104,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @JvmName("getViewModel1")
     private fun getViewModel(): AlbumListViewModel {
-        val viewModelFactory = AlbumListViewModelFactory(this.application)
-        val viewModel =
-            ViewModelProvider(
-                this, viewModelFactory
-            ).get(AlbumListViewModel::class.java)
-        return viewModel
+        val dao = AlbumDatabase.getInstance(application).albumCollectionDao
+        val viewModelFactory = AlbumListViewModelFactory(dao, this.application)
+        return ViewModelProvider(
+            this, viewModelFactory
+        ).get(AlbumListViewModel::class.java)
 
     }
 
@@ -117,7 +145,13 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_bookmark -> {
+                viewModel.toggleBookmarkFilter()
+                val res =
+                    if (viewModel.bookmarkFilter) R.drawable.ic_baseline_view_list_24 else R.drawable.ic_baseline_bookmark_24
+                item.setIcon(res)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -10,7 +10,7 @@ package ecl.ho.keysocalbum.network
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import ecl.ho.keysocalbum.models.ResAlbumApi
+import ecl.ho.keysocalbum.dtos.ResAlbumApi
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

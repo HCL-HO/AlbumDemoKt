@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ecl.ho.keysocalbum.R
 import ecl.ho.keysocalbum.databinding.VhAlbumListItemBinding
-import ecl.ho.keysocalbum.models.AlbumDTO
+import ecl.ho.keysocalbum.dtos.AlbumDTO
 
 class AlbumViewHolder(
     private val binding: VhAlbumListItemBinding
@@ -50,7 +50,7 @@ class AlbumViewHolder(
 
         country.text = albumDTO.country
 
-        price.text = albumDTO.collectionPrice
+        price.text = albumDTO.collectionPrice + " " + albumDTO.currency
 
         bookmark.setOnClickListener(onClickListener)
 
@@ -62,7 +62,7 @@ class AlbumViewHolder(
 
     companion object {
         interface OnClickListener {
-            fun bookmarkClicked(posistion: Int)
+            fun bookmarkClicked(item: AlbumDTO, exist: Boolean)
         }
     }
 

@@ -5,7 +5,7 @@
  *   Email: clhoac@gmail.com
  */
 
-package ecl.ho.keysocalbum.models
+package ecl.ho.keysocalbum.dtos
 
 data class AlbumDTO(
     var wrapperType: String? = "",
