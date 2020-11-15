@@ -1,11 +1,11 @@
 /*
- *   Created by Eric Ho on 11/13/20 12:33 PM
+ *   Created by Eric Ho on 11/15/20 11:15 AM
  *   Copyright (c) 2020 . All rights reserved.
- *   Last modified 11/13/20 12:31 PM
+ *   Last modified 11/15/20 9:51 AM
  *   Email: clhoac@gmail.com
  */
 
-package ecl.ho.keysocalbum.ui
+package ecl.ho.keysocalbum.ui.main
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -18,6 +18,7 @@ import ecl.ho.keysocalbum.dtos.ResAlbumApi
 import ecl.ho.keysocalbum.network.AlbumApi
 import ecl.ho.keysocalbum.network.PARM_ENTITY
 import ecl.ho.keysocalbum.network.PARM_TERM
+import ecl.ho.keysocalbum.util.DataConverter
 import ecl.ho.keysocalbum.vos.AlbumCollectionVo
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,7 +26,7 @@ import java.lang.Exception
 
 class AlbumListViewModel(val dao: AlbumCollectionDao, application: Application) : ViewModel() {
 
-    var bookmarkFilter = false
+    var bookmarkFilter = MutableLiveData(false)
 
     var apiResp: ResAlbumApi? = null
 
@@ -37,24 +38,20 @@ class AlbumListViewModel(val dao: AlbumCollectionDao, application: Application) 
 
     val count = MutableLiveData<String>()
 
-    val collections: LiveData<List<String>> = dao.getCollectionIds()
-
-
-    init {
-        getAlbumFromApi()
-    }
+    val collections: LiveData<List<AlbumCollectionVo>> = dao.getCollections()
+    
 
     fun getAlbumFromApi(): LiveData<Boolean> {
         val isFinshed = MutableLiveData<Boolean>(false)
         val api = AlbumApi.retrofitService.getAlbumsAsync(PARM_TERM, PARM_ENTITY)
         viewModelScope.launch {
             try {
+                bookmarkFilter.postValue(false)
                 loading.postValue(true)
                 loadingError.postValue(false)
                 apiResp = api.await()
-                val list = apiResp?.results
                 count.postValue(apiResp?.resultCount)
-                showAlbumList(apiResp)
+                showAlbumList(apiResp, false)
             } catch (ex: Exception) {
                 Timber.e(ex.message.toString())
                 loadingError.postValue(true)
@@ -81,28 +78,40 @@ class AlbumListViewModel(val dao: AlbumCollectionDao, application: Application) 
     }
 
     fun toggleBookmarkFilter() {
-        bookmarkFilter = !bookmarkFilter
-        showAlbumList(apiResp)
+        loadingError.postValue(false)
+        val bookfilterOn = !bookmarkFilter.value!!
+        showAlbumList(apiResp, bookfilterOn)
+        bookmarkFilter.postValue(bookfilterOn)
     }
 
-    private fun showAlbumList(apiResp: ResAlbumApi?) {
-        apiResp?.let { resAlbumApi ->
-            val list = resAlbumApi.results
-            when (bookmarkFilter) {
-                true -> {
-                    val newList = arrayListOf<AlbumDTO>()
-                    val collections = collections.value
-                    list.forEach {
-                        if (collections != null && collections.contains(it.collectionId)) {
-                            newList.add(it)
-                        }
-                    }
-                    albumsList.postValue(newList)
-                }
-                false -> {
-                    albumsList.postValue(list)
+    private fun showAlbumList(apiResp: ResAlbumApi?, bookfilterOn: Boolean) {
+        val list = apiResp?.results ?: arrayListOf()
+        when (bookfilterOn) {
+            true -> {
+                val newList = DataConverter.albumVosToAlbumDtos(collections.value)
+                albumsList.postValue(newList)
+            }
+            false -> {
+                albumsList.postValue(list)
+            }
+        }
+    }
+
+    fun refresh() {
+        showAlbumList(apiResp, false)
+    }
+
+    companion object {
+        fun isContainCollection(
+            collections: List<AlbumCollectionVo>?,
+            collectionId: String?
+        ): Boolean {
+            collections?.forEach {
+                if (it.collectionId == collectionId) {
+                    return true
                 }
             }
+            return false
         }
     }
 

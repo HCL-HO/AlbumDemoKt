@@ -13,12 +13,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ecl.ho.keysocalbum.databinding.VhAlbumListItemBinding
 import ecl.ho.keysocalbum.dtos.AlbumDTO
+import ecl.ho.keysocalbum.ui.main.AlbumListViewModel
+import ecl.ho.keysocalbum.vos.AlbumCollectionVo
 
 class AlbumRVAdapter(val holderOnClickListener: AlbumViewHolder.Companion.OnClickListener) :
     RecyclerView.Adapter<AlbumViewHolder>() {
 
     var list: List<AlbumDTO> = arrayListOf()
-    var collections: List<String> = arrayListOf()
+    var collections: List<AlbumCollectionVo> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -28,7 +30,7 @@ class AlbumRVAdapter(val holderOnClickListener: AlbumViewHolder.Companion.OnClic
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         val item = list[position]
-        val bookmarked = collections.contains(list[position].collectionId)
+        val bookmarked = AlbumListViewModel.isContainCollection(collections, item.collectionId)
         item.bookmarked = bookmarked
         holder.bind(item, View.OnClickListener {
             holderOnClickListener.bookmarkClicked(list[position], bookmarked)
@@ -44,7 +46,7 @@ class AlbumRVAdapter(val holderOnClickListener: AlbumViewHolder.Companion.OnClic
         notifyDataSetChanged()
     }
 
-    fun updateCollections(it: List<String>) {
+    fun updateCollections(it: List<AlbumCollectionVo>) {
         this.collections = it
     }
 

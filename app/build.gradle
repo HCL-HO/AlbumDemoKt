@@ -97,5 +97,11 @@ dependencies {
     //debug db
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
+    //rv anime
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.1'
+
+    //showcase
+    implementation('github.hellocsl:GalleryLayoutManager:1.0.6')
+
 
 }

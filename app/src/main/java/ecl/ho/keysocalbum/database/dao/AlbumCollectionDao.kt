@@ -26,4 +26,7 @@ interface AlbumCollectionDao {
 
     @Query("select collectionId from albumcollection")
     fun getCollectionIds(): LiveData<List<String>>
+
+    @Query("select * from albumcollection")
+    fun getCollections(): LiveData<List<AlbumCollectionVo>>
 }

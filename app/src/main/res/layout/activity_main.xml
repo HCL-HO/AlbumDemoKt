@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_barlayout"
@@ -22,6 +22,7 @@
             android:id="@+id/collapsebar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentScrim="@color/colorAccent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
@@ -60,6 +61,20 @@
     <!--        app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
     <include layout="@layout/content_main" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/album_fail_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-150dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/failloading"
+        tools:visibility="visible" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

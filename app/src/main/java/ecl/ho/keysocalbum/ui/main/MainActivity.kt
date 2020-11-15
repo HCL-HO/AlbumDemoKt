@@ -1,19 +1,20 @@
 /*
- *   Created by Eric Ho on 11/13/20 12:33 PM
+ *   Created by Eric Ho on 11/15/20 9:51 AM
  *   Copyright (c) 2020 . All rights reserved.
- *   Last modified 11/13/20 12:31 PM
+ *   Last modified 11/15/20 9:41 AM
  *   Email: clhoac@gmail.com
  */
 
-package ecl.ho.keysocalbum.ui
+package ecl.ho.keysocalbum.ui.main
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
@@ -22,19 +23,23 @@ import ecl.ho.keysocalbum.database.AlbumDatabase
 import ecl.ho.keysocalbum.dtos.AlbumDTO
 import ecl.ho.keysocalbum.network.PARM_ENTITY
 import ecl.ho.keysocalbum.network.PARM_TERM
+import ecl.ho.keysocalbum.ui.bookmark.BookedMarkedActivity
 import ecl.ho.keysocalbum.ui.albumrv.AlbumRVAdapter
 import ecl.ho.keysocalbum.ui.albumrv.AlbumViewHolder
 import ecl.ho.keysocalbum.util.DataConverter
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.vh_album_header.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val TAG_CONFIGCHANGE: String = "CONFIGCAHNGE"
     private val ALBUM_NAME: CharSequence? = PARM_TERM.replace("+", " ") + " " + PARM_ENTITY
     lateinit var viewModel: AlbumListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -50,9 +55,7 @@ class MainActivity : AppCompatActivity() {
                         viewModel.addToCollection(vo)
                     }
                 }
-
             }
-
         })
         album_rv.adapter = adapter
 
@@ -66,7 +69,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.loadingError.observe(this, {
             album_fail_loading.visibility = if (it) VISIBLE else GONE
-            album_rv.visibility = if (it) GONE else VISIBLE
+            album_rv.visibility = if (it) INVISIBLE else VISIBLE
+            adapter.updateList(arrayListOf())
         })
 
         viewModel.count.observe(this, {
@@ -85,6 +89,11 @@ class MainActivity : AppCompatActivity() {
 
         setupSwipeReferesh()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAlbumFromApi()
     }
 
     private fun setupSwipeReferesh() {
@@ -137,6 +146,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+        val item = menu.findItem(R.id.action_bookmark)
+        viewModel.bookmarkFilter.observe(this, {
+            val res =
+                if (it) R.drawable.ic_baseline_view_list_24 else R.drawable.ic_baseline_bookmark_24
+            item.setIcon(res)
+        })
         return true
     }
 
@@ -147,9 +162,6 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_bookmark -> {
                 viewModel.toggleBookmarkFilter()
-                val res =
-                    if (viewModel.bookmarkFilter) R.drawable.ic_baseline_view_list_24 else R.drawable.ic_baseline_bookmark_24
-                item.setIcon(res)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -163,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             false -> album_loading.hide()
         }
     }
+
 }
 
 
