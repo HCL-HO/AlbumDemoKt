@@ -8,14 +8,13 @@
 package ecl.ho.keysocalbum.ui.main
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import ecl.ho.keysocalbum.R
@@ -23,17 +22,17 @@ import ecl.ho.keysocalbum.database.AlbumDatabase
 import ecl.ho.keysocalbum.dtos.AlbumDTO
 import ecl.ho.keysocalbum.network.PARM_ENTITY
 import ecl.ho.keysocalbum.network.PARM_TERM
-import ecl.ho.keysocalbum.ui.bookmark.BookedMarkedActivity
 import ecl.ho.keysocalbum.ui.albumrv.AlbumRVAdapter
 import ecl.ho.keysocalbum.ui.albumrv.AlbumViewHolder
+import ecl.ho.keysocalbum.ui.bookmark.BookedMarkedActivity
 import ecl.ho.keysocalbum.util.DataConverter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.vh_album_header.*
 
+
 class MainActivity : AppCompatActivity() {
 
-    private val TAG_CONFIGCHANGE: String = "CONFIGCAHNGE"
     private val ALBUM_NAME: CharSequence? = PARM_TERM.replace("+", " ") + " " + PARM_ENTITY
     lateinit var viewModel: AlbumListViewModel
 
@@ -88,6 +87,22 @@ class MainActivity : AppCompatActivity() {
         setupCollapseBar()
 
         setupSwipeReferesh()
+
+        setupFAB()
+
+    }
+
+    private fun setupFAB() {
+        album_rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) fab.show() else if (dy < 0) fab.hide()
+            }
+        })
+
+        fab.setOnClickListener {
+            app_barlayout.setExpanded(true)
+            album_rv.smoothScrollToPosition(0)
+        }
 
     }
 
