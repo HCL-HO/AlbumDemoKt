@@ -9,3 +9,7 @@ https://itunes.apple.com/search?term=jack+johnson&entity=album
 - Can let user bookmarks the albums
 - Show a list of bookmarked albums
 - Have appropriate UI & UX
+
+![GIF](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+
+
