@@ -10,6 +10,7 @@ https://itunes.apple.com/search?term=jack+johnson&entity=album
 - Show a list of bookmarked albums
 - Have appropriate UI & UX
 
-![GIF](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+<img src="https://github.com/HCL-HO/AlbumDemoKt/blob/main/key_soc1.gif" width="216" height="444" />
+<img src="https://github.com/HCL-HO/AlbumDemoKt/blob/main/key_soc2.gif" width="216" height="444" />
 
 
