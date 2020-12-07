@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.Exception
 
-class AlbumListViewModel(val dao: AlbumCollectionDao, application: Application) : ViewModel() {
+class AlbumListViewModel(val dao: AlbumCollectionDao, val application: Application) : ViewModel() {
 
     var bookmarkFilter = MutableLiveData(false)
 
